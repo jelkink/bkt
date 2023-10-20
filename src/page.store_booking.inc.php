@@ -80,6 +80,7 @@ function process($code, &$gui, $currentDate = "") {
           break;
 
         case "template" :
+        case "t":
           $templateName = $fields[1];
           $ref = do_query("SELECT code FROM templates WHERE name = '$templateName'");
           if ($template = mysqli_fetch_object($ref)) {
@@ -100,6 +101,7 @@ function process($code, &$gui, $currentDate = "") {
           break;
 
         case "transaction" :
+        case "tr" :
           $transactionID++;
           $inTransaction = TRUE;
           $description = $fields[1];
