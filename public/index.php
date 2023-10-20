@@ -1,9 +1,9 @@
 <?php
 
-require_once("class.database.inc.php");
-require_once("class.httpcontext.inc.php");
-require_once("class.session.inc.php");
-require_once("class.gui.inc.php");
+require_once("../src/classes/class.database.inc.php");
+require_once("../src/classes/class.httpcontext.inc.php");
+require_once("../src/classes/class.session.inc.php");
+require_once("../src/classes/class.gui.inc.php");
 
 $dbh = new Database;
 $gui = new GUI;
@@ -44,9 +44,9 @@ if (!$dbh->open()) {
 			"<a href=\"index.php?page=export_csv&session=$session->id\" target=\"_blank\">Export to CSV</a><br />\n" .
 			"<br /><br /><a href=\"index.php?page=logout&session=$session->id\">Logout</a><br />\n");
 
-			if (file_exists("page." . $page . ".inc.php")) {
+			if (file_exists("../src/page." . $page . ".inc.php")) {
 
-				include("page." . $page . ".inc.php");
+				include("../src/page." . $page . ".inc.php");
 			} else {
 
 				$msg = "ERROR: Page " . $page . " does not exist.";
