@@ -1,6 +1,6 @@
 <?php
 
-$path_to_library = "../src/";
+$path_to_library = "../library/";
 
 require_once($path_to_library . "classes/class.database.inc.php");
 require_once($path_to_library . "classes/class.httpcontext.inc.php");
