@@ -114,6 +114,11 @@ function process($code, &$gui, $currentDate = "") {
             $note = $fields[1];
 
             do_query("INSERT INTO notes (booking, note) VALUES ($transactionID, \"$note\")");
+          elseif (preg_match("/.*tag/", $fields[0]) == 1) {
+
+            $tag = $fields[1];
+
+            do_query("INSERT INTO tags (booking, tag) VALUES ($transactionID, \"$tag\")");
           } else {
             $account = $fields[0];
 
