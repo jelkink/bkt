@@ -150,9 +150,10 @@ function do_query($query, $return_id = false)
 
   // increase total SQL queries time
   // (it's a global variable)
-  $GLOBALS ['sqltime'] += $time;
+  // $GLOBALS ['sqltime'] += $time;
   // increase queries count - could be useful
-  $GLOBALS ['sqlcount']++;
+  // $GLOBALS ['sqlcount']++;
+  
   return $res;
 }
 
