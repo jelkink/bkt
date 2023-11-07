@@ -28,6 +28,8 @@ function process($code, &$gui, $currentDate = "") {
   $inTransaction = FALSE;
   $inTemplate = FALSE;
 
+  $fullCommand = "";
+
   $currentCurrency = "EUR";
 
   $transactionID = do_scalar("SELECT MAX(transaction) FROM bookings");
@@ -42,6 +44,8 @@ function process($code, &$gui, $currentDate = "") {
 
         if ($inTransaction) $command = "continue_transaction";
         elseif ($inTemplate) $command = "continue_template";
+
+        $fullCommand .= "\n" . $line;
       } else {
 
         $inTransaction = FALSE;
@@ -52,6 +56,7 @@ function process($code, &$gui, $currentDate = "") {
           $inTemplate = FALSE;
         }
 
+        $fullCommand = $line;
         $command = $fields[0];
       }
 
@@ -114,7 +119,7 @@ function process($code, &$gui, $currentDate = "") {
             $note = $fields[1];
 
             do_query("INSERT INTO notes (booking, note) VALUES ($transactionID, \"$note\")");
-          elseif (preg_match("/.*tag/", $fields[0]) == 1) {
+          } elseif (preg_match("/.*tag/", $fields[0]) == 1) {
 
             $tag = $fields[1];
 
@@ -130,8 +135,13 @@ function process($code, &$gui, $currentDate = "") {
               if (preg_match("/[0-9\.]+/", $field) == 1) $amount = $field;
             }
 
-            do_query("INSERT INTO bookings (transaction, date, account, currency, amount, description)
+            if (isset($amount) and is_numeric($amount) and is_numeric($account)) {
+
+              do_query("INSERT INTO bookings (transaction, date, account, currency, amount, description)
               VALUES ($transactionID, STR_TO_DATE(\"$currentDate\", \"%Y%m%d\"), $account, \"$currency\", " . ($credit ? -1 : 1) * floor($amount * 100) . ", \"$description\")");
+            } else {
+              $gui->AddRight("ERROR: <pre>" . $fullCommand . "</pre> on date " . $currentDate . " (ID " . $transactionID . ")</br>");
+            }
           }
           break;
       }
