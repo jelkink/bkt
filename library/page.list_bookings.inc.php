@@ -2,7 +2,7 @@
 
 $accountNumber = HTTPContext::getInteger("account", 0);
 $transactionNumber = HTTPContext::getInteger("transaction", 0);
-$tag = HTTPContext::getString("tag", 0);
+$tag = HTTPContext::getString("tag", "");
 
 $accounts = array();
 
@@ -29,7 +29,7 @@ if ($accountNumber > 0)
   $ref = do_query("SELECT * FROM bookings WHERE account = $accountNumber ORDER BY date DESC, transaction DESC, id");
 elseif ($transactionNumber > 0)
   $ref = do_query("SELECT * FROM bookings WHERE transaction = $transactionNumber ORDER BY id");
-elseif ($tag != 0)
+elseif ($tag != "")
   $ref = do_query("SELECT * FROM bookings LEFT JOIN tags ON bookings.id = tags.booking WHERE tags.tag = '$tag' ORDER BY date DESC, transaction DESC, id");
 else
   $ref = do_query("SELECT * FROM bookings ORDER BY date DESC, transaction DESC, id");
