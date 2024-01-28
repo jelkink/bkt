@@ -3,13 +3,9 @@
 class Database
 {
   public static $handle;
-  var $query;
-  var $result;
-  var $nrofrows;
-  var $isresult;
-
-  private $transactions = 0;
-  public static $wasErrorInTransaction; // true if any query in transaction has failed
+  public static $insert_booking_stmt;
+  // var $query;
+  // var $result;
 
   function open()
   {
@@ -20,11 +16,16 @@ class Database
 
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+    Database::$insert_booking_stmt = Database::$handle->prepare(
+      "INSERT INTO bookings (transaction, date, account, currency, amount, description) VALUES (?, STR_TO_DATE(?, '%Y%m%d'), ?, ?, ?, ?)"
+    );
+
     return Database::$handle;
   }
 
   function close()
   {
+    Database::$insert_booking_stmt->close();
     Database::$handle->close();
   }
 }
