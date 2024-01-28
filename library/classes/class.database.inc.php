@@ -12,8 +12,6 @@ class Database
     do_query("SET NAMES utf8");
     mysqli_set_charset(Database::$handle, 'latin1');
 
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
     Database::$insert_booking_stmt = Database::$handle->prepare(
       "INSERT INTO bookings (transaction, date, account, currency, amount, description) VALUES (?, STR_TO_DATE(?, '%Y%m%d'), ?, ?, ?, ?)"
     );
