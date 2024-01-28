@@ -137,8 +137,17 @@ function process($code, &$gui, $currentDate = "") {
 
             if (isset($amount) and is_numeric($amount) and is_numeric($account)) {
 
-              do_query("INSERT INTO bookings (transaction, date, account, currency, amount, description)
-              VALUES ($transactionID, STR_TO_DATE(\"$currentDate\", \"%Y%m%d\"), $account, \"$currency\", " . ($credit ? -1 : 1) * floor($amount * 100) . ", \"$description\")");
+              $formattedAmount = ($credit ? -1 : 1) * floor($amount * 100);
+
+              Database::$insert_booking_stmt->bind_param("isisds",
+                $transactionID,
+                $currentDate,
+                $account, 
+                $currency, 
+                $formattedAmount, 
+                $description
+              );
+              Database::$insert_booking_stmt->execute();
             } else {
               $gui->AddRight("ERROR: <pre>" . $fullCommand . "</pre> on date " . $currentDate . " (ID " . $transactionID . ")</br>");
             }
