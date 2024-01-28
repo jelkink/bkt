@@ -4,8 +4,6 @@ class Database
 {
   public static $handle;
   public static $insert_booking_stmt;
-  // var $query;
-  // var $result;
 
   function open()
   {
