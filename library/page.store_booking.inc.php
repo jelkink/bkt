@@ -91,7 +91,7 @@ function process($code, &$gui, $currentDate = "") {
           if ($template = mysqli_fetch_object($ref)) {
 
             $templateCode = $template->code;
-            for ($i = 2; $i <= count($fields); $i++) {
+            for ($i = 2; $i < count($fields); $i++) {
 
               $templateCode = str_replace("$" . ($i - 1), $fields[$i], $templateCode);
             }
