@@ -17,6 +17,8 @@ if ($reset == "true") {
   do_query("DELETE FROM templates");
   do_query("DELETE FROM currencies");
   do_query("DELETE FROM notes");
+  do_query("DELETE FROM logs");
+  // do_query("DELETE FROM tags"); // This should be implemented, but not yet working on export/import!
 }
 
 function process($code, &$gui, $currentDate = "") {
