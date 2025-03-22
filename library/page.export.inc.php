@@ -33,28 +33,55 @@ while ($template = mysqli_fetch_object($ref)) {
 
 $gui->AddCenter("\n# Add transaction data\n");
 
-$prevTransaction = 0;
-$currDate = "";
+$dates = []; 
+
+$logs = [];
+$ref_log = do_query("SELECT * FROM logs ORDER BY date");
+while ($log = mysqli_fetch_object($ref_log)) {
+
+  $logDate = str_replace("-", "", $log->date);
+  $logs[$logDate][] = $log->entry;
+  $dates[$logDate] = true;
+}
+
+$bookings = [];
 $ref = do_query("SELECT account, transaction, date, currency, description, amount, note FROM bookings LEFT JOIN notes ON (notes.booking = bookings.transaction) ORDER BY date, transaction, bookings.id");
 while ($booking = mysqli_fetch_object($ref)) {
+  $bookingDate = str_replace("-", "", $booking->date);
+  $bookings[$bookingDate][] = $booking;
+  $dates[$bookingDate] = true;
+}
 
-  if ($booking->transaction != $prevTransaction) {
+ksort($dates);
 
-    if (str_replace("-", "", $booking->date) != $currDate) {
+$prevTransaction = 0;
 
-      $currDate = str_replace("-", "", $booking->date);
-      $gui->AddCenter(sprintf("\ndate %s", $currDate));
+foreach($dates as $date => $_) {
+
+  $gui->AddCenter(sprintf("\ndate %s", $date));
+
+  if (isset($logs[$date])) {
+    foreach ($logs[$date] as $logEntry) {
+        $gui->AddCenter(sprintf("log %s", $logEntry));
     }
-
-    $gui->AddCenter(sprintf("transaction \"%s\"", $booking->description));
-    $prevTransaction = $booking->transaction;
-
-    if ($booking->note)
-      $gui->AddCenter("\tnote \"$booking->note\"");
   }
 
-  $gui->AddCenter(sprintf("\t%03d %s%3s %.2f", $booking->account,
-    ($booking->amount < 0 ? "cr " : ""), $booking->currency, abs($booking->amount) / 100));
+  if (isset($bookings[$date])) {
+    foreach ($bookings[$date] as $booking) {
+
+      if ($booking->transaction != $prevTransaction) {
+
+        $gui->AddCenter(sprintf("transaction \"%s\"", $booking->description));
+        $prevTransaction = $booking->transaction;
+
+        if ($booking->note)
+          $gui->AddCenter("\tnote \"$booking->note\"");
+      }
+
+      $gui->AddCenter(sprintf("\t%03d %s%3s %.2f", $booking->account,
+        ($booking->amount < 0 ? "cr " : ""), $booking->currency, abs($booking->amount) / 100));
+    }
+  }
 }
 
 $gui->AddCenter("\ncurrency EUR\n");

@@ -105,6 +105,12 @@ function process($code, &$gui, $currentDate = "") {
           $currentCurrency = $fields[1];
           break;
 
+        case "log" :
+        case "diary" :
+          $log = mysqli_real_escape_string(Database::$handle, implode(" ", array_slice($fields, 1)));
+          do_query("INSERT INTO logs (date, entry) VALUES (\"$currentDate\", \"$log\")");
+          break;
+
         case "transaction" :
         case "tr" :
           $transactionID++;

@@ -1,5 +1,7 @@
 <?php
 
+// ini_set('display_errors', '1');
+
 $path_to_library = "../library/";
 
 require_once($path_to_library . "classes/class.database.inc.php");
@@ -41,6 +43,7 @@ if (!$dbh->open()) {
 			"<a href=\"index.php?page=list_bookings&session=$session->id\">List bookings</a><br />\n" .
 			"<a href=\"index.php?page=list_notes&session=$session->id\">List notes</a><br />\n" .
 			"<a href=\"index.php?page=list_tags&session=$session->id\">List tags</a><br />\n" .
+			"<a href=\"index.php?page=list_logs&session=$session->id\">List logs</a><br />\n" .
 			"<a href=\"index.php?page=list_templates&session=$session->id\">List templates</a><br />\n" .
 			"<a href=\"index.php?page=list_currencies&session=$session->id\">List currencies</a><br />\n" .
 			"<a href=\"index.php?page=export&session=$session->id\">Export to BKT</a><br />\n" .
